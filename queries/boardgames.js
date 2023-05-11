@@ -31,12 +31,33 @@ const updateBoardgame = async (id, boardgame) => {
     }catch (error){
         return error;
     }
-}
+};
+
+const getBoardgame = async () => {
+    try {
+        const oneBoardgame = await db.one("SELECT * FROM boardgames WHERE id=$1", id);
+        return oneBoardgame;
+      } catch (error) {
+        return error;
+      }
+};
+
+const createBoardgame = async (boardgame) => {
+    try {
+        const newBoardgame = await db.one(
+            "INSERT INTO boardgames (name, players, level, duration, two_more) VALUES($1, $2, $3, $4, $5) RETURNING *",
+            [boardgame.name, boardgame.players, boardgame.level, boardgame.duration, boardgame.two_more]
+          );
+          return newBoardgame;
+    } catch (error) {
+        throw error;
+    }
+};
 
 module.exports = {
     getAllBoardgames,
-    // getBoardgame,
-    // createBoardgame,
+    getBoardgame,
+    createBoardgame,
     deleteBoardgame,
     updateBoardgame,
 };
